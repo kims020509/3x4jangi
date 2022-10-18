@@ -12,5 +12,17 @@ class BOARD:
             return
         self.board[y][x] = piece
     def start(self):
-        self.set_board()
+        self.set_board(0, 0, ('S', 'P'))
+        self.set_board(0, 1, ('K', 'P'))
+        self.set_board(0, 2, ('H', 'P'))
+        self.set_board(1, 1, ('J', 'P'))
+        self.set_board(3, 0, ('S', 'E'))
+        self.set_board(3, 1, ('K', 'E'))
+        self.set_board(3, 2, ('H', 'E'))
+        self.set_board(2, 1, ('J', 'E'))
 
+if __name__ == '__main__':
+    playing = BOARD()
+    playing.print()
+    playing.start()
+    playing.print()
