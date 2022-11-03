@@ -8,6 +8,7 @@ class BOARD:
         self.piece_type = np.array(['K', 'S', 'J', 'Z', 'H', 'K', 'S', 'J', 'Z', 'H'])
         self.piece_go = np.loadtxt('piece_go.csv', bool, delimiter=',')
         self.y_axis = {'a' : 1, 'b' : 2, 'c' : 3}
+        self.turn = 0
 
     def print(self):
         print('-'*11)
@@ -44,15 +45,14 @@ class BOARD:
     def check_other(self, new_xy, type_num):
         other = self.board[new_xy[1] - 1][new_xy[0] - 1]
         if other[1] == '1':
-            other_index = self.type_dic[other[0]]
-            self.piece_xy[5 + other_index] = '@00'
-        if type_num == 3 and new_xy[0] == 4:
+            other_index = self.type_dic[other[0]] + 5
+            self.piece_xy[other_index] = '@00'
+        if type_num == 3 and new_xy[0] == 3:
             self.piece_xy[4] = self.piece_xy[type_num]
             self.piece_xy[type_num] = 'x00'
             print('Change J -> H')
 
     def solve_command(self, command):
-        
         arr = [i for i in command]
         if arr[0] not in self.type_dic: print("Wrong command")
         if arr[1] in self.y_axis:
@@ -69,14 +69,22 @@ class BOARD:
                 return
         else: print("Wrong command")
 
+    def Ai(self):
+        pass
+
 if __name__ == '__main__':
     playing = BOARD()
     playing.reset_board()
     playing.print()
     while 1:
+        playing.turn = 0
         command = input()
         if command == '0':
             break
         playing.solve_command(command)
+        playing.reset_board()
+        playing.print()
+        playing.turn = 1
+        playing.Ai()
         playing.reset_board()
         playing.print()
