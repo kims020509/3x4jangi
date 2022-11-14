@@ -12,10 +12,22 @@ class BOARD:
 
     def print(self):
         print('-'*11)
+        print('AI : ', end='')
+        for i in range(5):
+            if self.piece_xy[i][0] == '@':
+                print(self.piece_type[i], end=' ')
+        print()
+        print('-'*11)
         for y in range(3):
             for x in range(4):
                 print(self.board[y][x], end=' ')
             print()
+        print('-'*11)
+        print('PL : ', end='')
+        for i in range(4, 10):
+            if self.piece_xy[i][0] == '@':
+                print(self.piece_type[i], end=' ')
+        print()
         print('-'*11)
 
     def reset_board(self):
