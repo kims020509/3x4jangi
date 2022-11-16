@@ -30,6 +30,13 @@ class BOARD:
         print()
         print('-'*11)
 
+    def Error(self, n):
+        error_mas = {
+            0 : 'Unknown Error',
+            1 : 'Wrong command',
+            2 : 'Wrong xy'
+        }
+
     def reset_board(self):
         self.board = np.array([['--', '--', '--', '--'] for i in range(3)])
         for i in range(10):
@@ -46,40 +53,56 @@ class BOARD:
             if dx[i] == x and dy[i] == y: return i
         return 4
 
-    def check_xy(self, new_xy, old_xy, type_num):
-        if new_xy[0] > 4 or new_xy[1] > 3: return False
+    def isIn(self, xy):
+        if xy[0] > 4 or xy[1] > 3: return False
+        return True
+
+    def isEmpty(self, xy):
+        if self.board[xy[1] - 1][xy[0] - 1] == "--": return True
+        return False
+
+    def isCanGo(self, new_xy, old_xy, type_num):
         nx, ny = (new_xy[0] - old_xy[0], new_xy[1] - old_xy[1])
         index = self.local_xy(nx, ny)
         if not self.piece_go[type_num][index]: return False
-        if self.board[new_xy[1] - 1][new_xy[0] - 1][1] == '0': return False
         return True
+
+    def move(self, new_xy, type_num):
+        old_xy = (int(self.piece_xy[type_num][1]), self.y_axis[self.piece_xy[type_num][0]])
+        pass
     
+    def place(self, new_xy, type_num):
+        pass
+
     def check_other(self, new_xy, type_num):
         other = self.board[new_xy[1] - 1][new_xy[0] - 1]
         if other[1] == '1':
             other_index = self.type_dic[other[0]] + 5
+            if other_index == 9: 
+                self.piece_xy[7] = '@00'
+                self.piece_xy[other_index] = 'x00'
             self.piece_xy[other_index] = '@00'
+        
         if type_num == 3 and new_xy[0] == 3:
             self.piece_xy[4] = self.piece_xy[type_num]
             self.piece_xy[type_num] = 'x00'
             print('Change J -> H')
 
-    def solve_command(self, command):
+    def Player(self, command):
         arr = [i for i in command]
         if arr[0] not in self.type_dic: print("Wrong command")
         if arr[1] in self.y_axis:
             type_num = self.type_dic[arr[0]]
             if self.piece_xy[type_num][0] == 'x': return
             new_xy_num = (int(arr[2]), self.y_axis[arr[1]])
-            old_xy_num = (int(self.piece_xy[type_num][1]), self.y_axis[self.piece_xy[type_num][0]])
-            if self.check_xy(new_xy_num, old_xy_num, type_num):
+            
+            if self.check_go(new_xy_num, old_xy_num, type_num):
                 new_xy_txt = arr[1] + arr[2] + '0'
                 self.piece_xy[type_num] = new_xy_txt
                 self.check_other(new_xy_num, type_num)
             else:
-                print("Wrong XY")
-                return
-        else: print("Wrong command")
+                return print("Wrong XY")    
+        else: return print("Wrong command")
 
     def Ai(self):
         pass
