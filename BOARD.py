@@ -30,12 +30,8 @@ class BOARD:
         print()
         print('-'*11)
 
-    def Error(self, n):
-        error_mas = {
-            0 : 'Unknown Error',
-            1 : 'Wrong command',
-            2 : 'Wrong xy'
-        }
+    def Error():
+        print('Error')
 
     def reset_board(self):
         self.board = np.array([['--', '--', '--', '--'] for i in range(3)])
@@ -46,12 +42,15 @@ class BOARD:
             print_piece = self.piece_type[i] + self.piece_xy[i][2]
             self.board[y][x] = print_piece
 
-    def local_xy(self, x, y): #return direction index
+    def getlocalXY(self, x, y): #return direction index
         dx = [1, 0, -1, 1, 0, -1, 1, 0, -1]
         dy = [1, 1, 1, 0, 0, 0, -1, -1, -1]
         for i in range(9):
             if dx[i] == x and dy[i] == y: return i
         return 4
+    
+    def getBoardNow(self, xy):
+        return self.board[xy[1] - 1][xy[0] - 1]
 
     def isIn(self, xy):
         if xy[0] > 4 or xy[1] > 3: return False
@@ -61,15 +60,23 @@ class BOARD:
         if self.board[xy[1] - 1][xy[0] - 1] == "--": return True
         return False
 
-    def isCanGo(self, new_xy, old_xy, type_num):
+    def isCanGo(self, new_xy, old_xy, type_num, turn):
         nx, ny = (new_xy[0] - old_xy[0], new_xy[1] - old_xy[1])
-        index = self.local_xy(nx, ny)
+        index = self.getlocalXY(nx, ny)
         if not self.piece_go[type_num][index]: return False
+        if self.getBoardNow(new_xy)[1] == turn: return False
         return True
 
-    def move(self, new_xy, type_num):
+    def move(self, new_xy, type_num, turn):
         old_xy = (int(self.piece_xy[type_num][1]), self.y_axis[self.piece_xy[type_num][0]])
-        pass
+        if self.isCanGo(new_xy, old_xy, type_num, turn):
+            new_xy_txt = self.y_axis[new_xy[1]] + new_xy[0] + turn
+            self.piece_xy[type_num] = new_xy_txt
+            if type_num % 5 == 3 and new_xy[0] == 3:
+                self.piece_xy[4] = self.piece_xy[type_num]
+                self.piece_xy[type_num] = 'x00'
+        else:
+            return self.Error()
     
     def place(self, new_xy, type_num):
         pass
@@ -95,14 +102,7 @@ class BOARD:
             type_num = self.type_dic[arr[0]]
             if self.piece_xy[type_num][0] == 'x': return
             new_xy_num = (int(arr[2]), self.y_axis[arr[1]])
-            
-            if self.check_go(new_xy_num, old_xy_num, type_num):
-                new_xy_txt = arr[1] + arr[2] + '0'
-                self.piece_xy[type_num] = new_xy_txt
-                self.check_other(new_xy_num, type_num)
-            else:
-                return print("Wrong XY")    
-        else: return print("Wrong command")
+            self.move(new_xy_num, type_num, '0')
 
     def Ai(self):
         pass
@@ -116,7 +116,7 @@ if __name__ == '__main__':
         command = input()
         if command == '0':
             break
-        playing.solve_command(command)
+        playing.Player(command)
         playing.reset_board()
         playing.print()
         playing.turn = 1
