@@ -14,7 +14,7 @@ class BOARD:
         print('-'*11)
         print('AI : ', end='')
         for num, i in enumerate(self.piece_xy):
-            if i[0] == '@' and i[2] == '1':
+            if i[0] == '@' and i[2] == '0':
                 print(self.piece_type[num], end=' ')
         print()
         print('-'*11)
@@ -25,7 +25,7 @@ class BOARD:
         print('-'*11)
         print('PL : ', end='')
         for num, i in enumerate(self.piece_xy):
-            if i[0] == '@' and i[2] == '0':
+            if i[0] == '@' and i[2] == '1':
                 print(self.piece_type[num], end=' ')
         print()
         print('-'*11)
@@ -38,6 +38,11 @@ class BOARD:
             x, y = (int(self.piece_xy[i][1]) - 1, self.y_axis[self.piece_xy[i][0]] - 1)
             print_piece = self.piece_type[i] + self.piece_xy[i][2]
             self.board[y][x] = print_piece
+
+    def check_win(self):
+        if self.piece_xy[0][0] == 'x' or self.piece_xy[5][0] == 'x':
+            print('Win')
+            quit()
 
     def getlocalXY(self, x, y): #return direction index
         dx = [1, 0, -1, 1, 0, -1, 1, 0, -1]
@@ -52,8 +57,10 @@ class BOARD:
     def getNum(self, xy):
         board = self.getBoardNow(xy)
         type_num = self.type_dic[board[0]]
+        print(type_num)
         for i in range(2):
             key = (self.piece_xy[type_num][1], self.piece_xy[type_num][0])
+            print(key)
             key = (int(key[0]), self.y_axis[key[1]])
             if xy == key: return type_num
             type_num += 5
@@ -67,7 +74,8 @@ class BOARD:
         return False
 
     def isDead(self, type_num, turn):
-        if self.piece_type[type_num] == '@0' + turn: return True
+        print(self.piece_xy[type_num], turn)
+        if self.piece_xy[type_num] == '@0' + turn: return True
         return False
 
     def isCanGo(self, new_xy, old_xy, type_num, turn):
@@ -84,11 +92,12 @@ class BOARD:
         if self.isCanGo(new_xy, old_xy, type_num, turn):
             if not self.isEmpty(new_xy):
                 other_num = self.getNum(new_xy)
+                other_turn = f'{abs(int(turn) - 1)}'
                 if other_num % 5 == 4:
-                    self.piece_xy[other_num - 1] = '@0' + turn
-                    self.piece_xy[other_num] = 'x00'
+                    self.piece_xy[other_num - 1] = '@0' + other_turn
+                    self.piece_xy[other_num] = 'x0' + other_turn
                 else:
-                    self.piece_xy[other_num] = '@0' + turn
+                    self.piece_xy[other_num] = '@0' + other_turn
             new_xy_txt = self.y_axis[new_xy[1]] + f'{new_xy[0]}' + turn
 
             if type_num % 5 == 3 and new_xy[0] == 3 - int(turn):
@@ -98,21 +107,21 @@ class BOARD:
                 self.piece_xy[type_num] = new_xy_txt
     
     def place(self, new_xy, type_num, turn):
-        if self.isEmpty(new_xy) and self.isDead(new_xy, turn):
+        if self.isEmpty(new_xy) and self.isDead(type_num, turn):
             new_xy_txt= self.y_axis[new_xy[1]] + f'{new_xy[0]}' + turn
             self.piece_xy[type_num] = new_xy_txt
 
     def Player(self, command):
-        playing.turn = 0
         arr = [i for i in command]
         if arr[0] not in self.type_dic: print("Wrong command")
         if arr[1] in self.y_axis:
             type_num = self.type_dic[arr[0]]
-            if self.piece_xy[type_num][0] == 'x': return
+            if self.piece_xy[type_num][0] == 'x' : return
             new_xy_num = (int(arr[2]), self.y_axis[arr[1]])
             if not self.isIn(new_xy_num): return
             if arr[-1] == '!':
                 return self.place(new_xy_num, type_num, '0')
+            if self.piece_xy[type_num][0] == '@' : return
             return self.move(new_xy_num, type_num, '0')
         
 
@@ -134,6 +143,7 @@ if __name__ == '__main__':
     playing.print()
     while 1:
         print('Player : ', end='')
+        playing.turn = 0
         command = input()
         if command == None:
             break
