@@ -1,4 +1,6 @@
 import numpy as np
+import Ai
+
 
 class BOARD:
     def __init__(self):
@@ -137,6 +139,10 @@ class BOARD:
                 return self.place(new_xy_num, type_num, '1')
             return self.move(new_xy_num, type_num, '1')
         
+    def Ai_(self):
+        now = Ai.case(self.board)
+        print(now.calc_expt())
+
 if __name__ == '__main__':
     playing = BOARD()
     playing.reset_board()
@@ -156,3 +162,5 @@ if __name__ == '__main__':
         playing.Ai(command)
         playing.reset_board()
         playing.print()
+        playing.Ai_()
+
