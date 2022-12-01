@@ -1,8 +1,14 @@
 import numpy as np
 import dicBoard as db
+from anytree import Node, RenderTree
 
-Tree = []
 
+board = np.array([
+    ['S0', '--', '--', 'S1'], 
+    ['K0', 'Z0', 'Z1', 'K1'],
+    ['J0', '--', '--', 'J1']])
+
+root = Node("root", data= None, expt= 0)
 type_dic = {'K' : 0, 'S' : 1, 'J' : 2, 'Z' : 3, 'H' : 4}
 piece_score_dic = {'K' : 100 , 'S' : 3, 'J' : 3, 'H' : 2, 'Z' : 1}
 x_score_dic = {0 : 0.1, 1 : 0.2, 2 : 0.2, 3 : 0.1}
@@ -39,7 +45,7 @@ def checkCASE(board):
             piece = board[y][x]
             if piece[0] == '-' : continue
             if piece[1] == '0' : continue
-            ptype = type_dic[piece[0]]
+            ptype = type_dic[piece[0]] + 5
             nx = [1, 0, -1, 1, 0, -1, 1, 0, -1]
             ny = [1, 1, 1, 0, 0, 0, -1, -1, -1]
             for idx in range(9):
@@ -48,14 +54,24 @@ def checkCASE(board):
                 tpiece = board[dy][dx]
                 if tpiece[1] == '1': continue
                 if db.piece_go[ptype][idx]:
-                    tmp_board = [item[:] for item in board]
-                    tmp_board[dy][dx] = piece
-                    tmp_board[y][x] = '--'
-                    print_(tmp_board)
-                    print(calc_expt(tmp_board))
-                    tmp_board[dy][dx] = tpiece
-                    tmp_board[y][x] = piece
+                    if ptype == 8 and dx < 2:
+                        board[dy][dx] = 'H1'
+                    else:
+                        board[dy][dx] = piece
+                    board[y][x] = '--'
+                    print_(board)
+                    new_Node = Node(f"A{ptype}{idx}", root, data= np.array(board), expt= calc_expt(board))
+                    board[dy][dx] = tpiece
+                    board[y][x] = piece
                     
-def minimax():
-    for item in Tree:
-        print(calc_expt(item))
+def minimax(board):
+    checkCASE(board)
+
+    print("=="*20)
+    for row in RenderTree(root):
+        pre, fill, node = row
+        print(f"{pre}{node.name}, expt: {node.expt:.2f}")
+    print("=="*20)
+
+if __name__ == '__main__':
+    minimax(board)

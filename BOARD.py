@@ -155,6 +155,7 @@ class BOARD:
     def Ai_(self):
         print(Ai.calc_expt(self.board))
         Ai.checkCASE(self.board)
+        Ai.minimax()
 
 if __name__ == '__main__':
     playing = BOARD()
