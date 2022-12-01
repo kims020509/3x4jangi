@@ -5,6 +5,7 @@ import dicBoard as db
 class BOARD:
     def __init__(self):
         self.board = np.array([['--', '--', '--', '--'] for i in range(3)])
+        self.catch = [[],[]]
         self.type_dic = {'K' : 0, 'S' : 1, 'J' : 2, 'Z' : 3, 'H' : 4}
         self.piece_xy = np.array(['b10', 'a10', 'c10', 'b20', 'x00', 'b41', 'a41', 'c41', 'b31', 'x01'])
         self.piece_type = np.array(['K', 'S', 'J', 'Z', 'H', 'K', 'S', 'J', 'Z', 'H'])
@@ -15,9 +16,8 @@ class BOARD:
     def print(self):
         print('-'*11)
         print('AI : ', end='')
-        for num, i in enumerate(self.piece_xy):
-            if i[0] == '@' and i[2] == '0':
-                print(self.piece_type[num], end=' ')
+        for piece in self.catch[1]:
+            print(piece, end=' ')
         print()
         print('-'*11)
         for y in range(3):
@@ -26,16 +26,20 @@ class BOARD:
             print()
         print('-'*11)
         print('PL : ', end='')
-        for num, i in enumerate(self.piece_xy):
-            if i[0] == '@' and i[2] == '1':
-                print(self.piece_type[num], end=' ')
+        for piece in self.catch[0]:
+            print(piece, end=' ')
         print()
         print('-'*11)
     
     def reset_board(self):
         self.board = np.array([['--', '--', '--', '--'] for i in range(3)])
+        self.catch = [[],[]]
         for i in range(10):
-            if self.piece_xy[i][0] == 'x' or self.piece_xy[i][0] == '@':
+            if self.piece_xy[i][0] == 'x':
+                continue
+            if self.piece_xy[i][0] == '@':
+                turn = int(self.piece_xy[i][2])
+                self.catch[turn].append(self.piece_type[i])
                 continue
             x, y = (int(self.piece_xy[i][1]) - 1, self.y_axis[self.piece_xy[i][0]] - 1)
             print_piece = self.piece_type[i] + self.piece_xy[i][2]
@@ -52,8 +56,13 @@ class BOARD:
     def endTurn(self):
         if self.piece_xy[0][1] == '3' or self.piece_xy[0][1] == '4':
             self.win[0] += 1
+        else:
+            self.win[0] = 0
         if self.piece_xy[5][1] == '1' or self.piece_xy[0][1] == '2':
             self.win[1] += 1
+        else:
+            self.win[1] = 0
+
         if self.win[0] == 2:
             print('Player Win by Still')
             input()
@@ -153,15 +162,15 @@ class BOARD:
             return self.move(new_xy_num, type_num, '1')
         
     def Ai_(self):
-        print(Ai.calc_expt(self.board))
-        Ai.checkCASE(self.board)
-        Ai.minimax()
-
+        Ai.Aing(self.board, 5)
+        print()
+ 
 if __name__ == '__main__':
     playing = BOARD()
     playing.reset_board()
     playing.print()
     while 1:
+        print(playing.catch)
         print('Player : ', end='')
         command = input()
         if command == None:
@@ -170,11 +179,11 @@ if __name__ == '__main__':
         playing.reset_board()
         playing.print()
         playing.isWin()
+        playing.Ai_()
         print('AI : ', end='')
         command = input()
         playing.Ai(command)
         playing.reset_board()
         playing.print()
-        playing.Ai_()
         playing.isWin()
         playing.endTurn()
