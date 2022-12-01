@@ -1,6 +1,6 @@
 import numpy as np
 import Ai
-
+import dicBoard as db
 
 class BOARD:
     def __init__(self):
@@ -10,7 +10,7 @@ class BOARD:
         self.piece_type = np.array(['K', 'S', 'J', 'Z', 'H', 'K', 'S', 'J', 'Z', 'H'])
         self.piece_go = np.loadtxt('piece_go.csv', bool, delimiter=',')
         self.y_axis = {'a' : 1, 'b' : 2, 'c' : 3, 1 : 'a', 2 : 'b', 3 : 'c'}
-        self.turn = 0
+        self.win = [0, 0]
 
     def print(self):
         print('-'*11)
@@ -41,10 +41,26 @@ class BOARD:
             print_piece = self.piece_type[i] + self.piece_xy[i][2]
             self.board[y][x] = print_piece
 
-    def check_win(self):
-        if self.piece_xy[0][0] == 'x' or self.piece_xy[5][0] == 'x':
-            print('Win')
-            quit()
+    def isWin(self):
+        if self.piece_xy[0][0] == '@':
+            print('AI Win by Catch')
+            input()
+        elif self.piece_xy[5][0] == '@':
+            print('Player Win by Catch')
+            input()
+        
+    def endTurn(self):
+        if self.piece_xy[0][1] == '3' or self.piece_xy[0][1] == '4':
+            self.win[0] += 1
+        if self.piece_xy[5][1] == '1' or self.piece_xy[0][1] == '2':
+            self.win[1] += 1
+        if self.win[0] == 2:
+            print('Player Win by Still')
+            input()
+        if self.win[1] == 2:
+            print('AI Win by Still')
+            input()
+        print(self.win)
 
     def getlocalXY(self, x, y): #return direction index
         dx = [1, 0, -1, 1, 0, -1, 1, 0, -1]
@@ -58,11 +74,9 @@ class BOARD:
 
     def getNum(self, xy):
         board = self.getBoardNow(xy)
-        type_num = self.type_dic[board[0]]
-        print(type_num)
+        type_num = db.type_dic[board[0]]
         for i in range(2):
             key = (self.piece_xy[type_num][1], self.piece_xy[type_num][0])
-            print(key)
             key = (int(key[0]), self.y_axis[key[1]])
             if xy == key: return type_num
             type_num += 5
@@ -115,9 +129,9 @@ class BOARD:
 
     def Player(self, command):
         arr = [i for i in command]
-        if arr[0] not in self.type_dic: print("Wrong command")
+        if arr[0] not in db.type_dic: print("Wrong command")
         if arr[1] in self.y_axis:
-            type_num = self.type_dic[arr[0]]
+            type_num = db.type_dic[arr[0]]
             if self.piece_xy[type_num][0] == 'x' : return
             new_xy_num = (int(arr[2]), self.y_axis[arr[1]])
             if not self.isIn(new_xy_num): return
@@ -125,13 +139,12 @@ class BOARD:
                 return self.place(new_xy_num, type_num, '0')
             if self.piece_xy[type_num][0] == '@' : return
             return self.move(new_xy_num, type_num, '0')
-        
 
     def Ai(self, command):
         arr = [i for i in command]
-        if arr[0] not in self.type_dic: print("Wrong command")
+        if arr[0] not in db.type_dic: print("Wrong command")
         if arr[1] in self.y_axis:
-            type_num = self.type_dic[arr[0]] + 5
+            type_num = db.type_dic[arr[0]] + 5
             if self.piece_xy[type_num][0] == 'x': return
             new_xy_num = (int(arr[2]), self.y_axis[arr[1]])
             if not self.isIn(new_xy_num): return
@@ -140,8 +153,8 @@ class BOARD:
             return self.move(new_xy_num, type_num, '1')
         
     def Ai_(self):
-        now = Ai.case(self.board)
-        print(now.calc_expt())
+        print(Ai.calc_expt(self.board))
+        Ai.checkCASE(self.board)
 
 if __name__ == '__main__':
     playing = BOARD()
@@ -149,18 +162,18 @@ if __name__ == '__main__':
     playing.print()
     while 1:
         print('Player : ', end='')
-        playing.turn = 0
         command = input()
         if command == None:
             break
         playing.Player(command)
         playing.reset_board()
         playing.print()
-        playing.turn = 1
+        playing.isWin()
         print('AI : ', end='')
         command = input()
         playing.Ai(command)
         playing.reset_board()
         playing.print()
         playing.Ai_()
-
+        playing.isWin()
+        playing.endTurn()
