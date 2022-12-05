@@ -3,10 +3,10 @@ import dicBoard as db
 import Ai
 
 board = np.array([
-    ['S0', '--', '--', 'S1'], 
-    ['K0', 'Z0', 'Z1', 'K1'],
-    ['J0', '--', '--', 'J1']])
-catch = [['Z'], []]
+    ['S0', 'S0', 'Z1', '--'], 
+    ['K0', 'J0', 'K1', '--'],
+    ['--', '--', '--', 'J1']])
+catch = [[], ['Z']]
 
 stay_win = [0, 0]
 
@@ -54,33 +54,39 @@ def isCanGo(board, new_xy, old_xy, type_, turn):
     if getBoardNow(board, new_xy)[1] == turn: return False
     return True
 
-def findXY(board, type_, turn):
-    for x in range(4):
-        for y in range(3):
-            if board[y][x] == f'{type_}{turn}':
-                return (x + 1), (y + 1)
+def findXY(board, new_xy, type_, turn):
+    out_xy = (0, 0)
+    for x in range(-1, 2):
+        for y in range(-1, 2):
+            dx, dy = (new_xy[0] + x - 1, new_xy[1] + y - 1)
+            if isIn(dx, dy):
+                if board[dy][dx] == f'{type_}{turn}':
+                    out_xy = (dx + 1), (dy + 1)
+    return out_xy
 
 def setPiece(board, new_xy, type_, turn):
     board[new_xy[1] - 1][new_xy[0] - 1] = f'{type_}{turn}'
     return board
 
 def move(board, catch, new_xy, type_ = '-', turn = '-'):
-    old_xy = findXY(board, type_, turn)
+    old_xy = findXY(board, new_xy, type_, turn)
+    print(old_xy)
     if isCanGo(board, new_xy, old_xy, type_, turn):
         if not isEmpty(board, new_xy):
-            catch.append(getBoardNow(board, new_xy))
+            catch[turn].append(getBoardNow(board, new_xy)[0])
         if type_ == 'Z' and new_xy[0] == 3 - turn:
             board = setPiece(board, new_xy, 'H', turn)
             board = setPiece(board, old_xy, '-', '-')
         else:
             board = setPiece(board, new_xy, type_, turn)
             board = setPiece(board, old_xy, '-', '-')
-    return board
+    return board, catch
 
 def place(board, catch, new_xy, type_, turn):
     if isEmpty(board, new_xy) and isCatch(catch, type_, turn):
         board = setPiece(board, new_xy, type_, turn)
-    return board
+        catch[turn].remove(type_)
+    return board, catch
 
 def Player(board, catch, command):
     arr = [i for i in command]
@@ -99,7 +105,7 @@ if __name__ == '__main__':
     print_(board, catch)
     while 1:
         command = input()
-        board = Player(board, catch, command)
+        board, catch = Player(board, catch, command)
         print_(board, catch)
-        board = Ai_(board, catch)
+        board, catch = Ai_(board, catch)
         print_(board, catch)
