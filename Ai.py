@@ -1,6 +1,5 @@
 import numpy as np
 import dicBoard as db
-from copy import copy
 from anytree import Node, RenderTree
 
 board = np.array([
@@ -62,15 +61,15 @@ def calc_expt(board, catch):
 def Aing(board, catch, depth):
     root = Node("root", data1= board, data2= catch, expt= calc_expt(board, catch)) 
     Best = minimax(root, depth, -np.inf, np.inf, True)
-    print("=="*20)
-    for row in RenderTree(root):
-        pre, fill, node = row
-        print(f"{pre}{node.name}, expt: {node.expt:.2f}")
-    print("=="*20)
+    # print("=="*20)
+    # for row in RenderTree(root):
+    #     pre, fill, node = row
+    #     print(f"{pre}{node.name}, expt: {node.expt:.2f}")
+    # print("=="*20)
     for i in range(depth - 1):
         Best = Best.parent
     # print("=" * 8 + "Recommand" + "="*8)
-    # # print_(board, catch)
+    # print_(board, catch)
     # print_(Best.data1, Best.data2)
     # print("=" * 25)
     return Best.data1, Best.data2
