@@ -61,8 +61,10 @@ def findXY(board, new_xy, type_, turn):
         for y in range(-1, 2):
             dx, dy = (new_xy[0] + x - 1, new_xy[1] + y - 1)
             if isIn(dx, dy):
+                old_xy = (dx, dy)
                 if board[dy][dx] == f'{type_}{turn}':
                     temp_xy.append(((dx + 1), (dy + 1)))
+    # print(temp_xy)
     return temp_xy
 
 def setPiece(board, new_xy, type_, turn):
@@ -73,7 +75,7 @@ def move(board, catch, old_xy, new_xy, type_ = '-', turn = '-'):
     if isCanGo(board, new_xy, old_xy, type_, turn):
         if not isEmpty(board, new_xy):
             catch[turn].append(getBoardNow(board, new_xy)[0])
-        if type_ == 'Z' and new_xy[0] == 3 - turn:
+        if type_ == 'Z' and new_xy[0] == 4 - turn:
             board = setPiece(board, new_xy, 'H', turn)
             board = setPiece(board, old_xy, '-', '-')
         else:
@@ -92,13 +94,13 @@ def Player(board, catch, old_xy, com_xy, type_, isMove):
     else:
         return place(board, catch, com_xy, type_, 0)
 
-def Ai_(board, catch):
-    return Ai.Aing(board, catch, 3)
+def Ai_(board, catch, depth):
+    return Ai.Aing(board, catch, depth)
 
 def input_command(board, catch):
     isMove = True
     while 1:
-        print("다음 수를 입력하세요...")
+        print("수를 입력하세요...")
         command = input()
         arr = [i for i in command]
         if (arr[0] in db.type_dic) and (arr[1] in db.y_axis) and (0 < int(arr[2]) < 5):
@@ -109,7 +111,10 @@ def input_command(board, catch):
                 count = len(temp_xy)
                 if  count == 1:
                     old_xy = temp_xy[0]
-                    break
+                    if isCanGo(board, com_xy, old_xy, type_, 0) :
+                        break
+                    else:
+                        print("불가능한 수 입니다.")
                 elif count > 1:
                     print("움직일 말을 선택해 주세요...")
                     for i in range(count):
@@ -123,11 +128,14 @@ def input_command(board, catch):
                         print("다시 입력해주세요...", end= " ")
                         t = input()
                     old_xy = temp_xy[int(t)]
-                    break
+                    if isCanGo(board, com_xy, old_xy, type_, 0) :
+                        break
+                    else:
+                        print("불가능한 수 입니다.")
                 else:
                     print("가능하지 않습니다.")
             elif len(arr) == 4:
-                if arr[-1] == "!" and isCatch(catch, type_, 0) and isEmpty(board, com_xy) and com_xy[0] < 3:
+                if arr[-1] == "!" and isCatch(catch, type_, 0) and isEmpty(board, com_xy) and com_xy[0] < 4:
                     isMove = False
                     old_xy = (0, 0)
                     break

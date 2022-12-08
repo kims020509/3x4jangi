@@ -3,9 +3,9 @@ import dicBoard as db
 from anytree import Node, RenderTree
 
 board = np.array([
-    ['S0', '--', '--', 'S1'], 
-    ['K0', 'Z0', 'Z1', 'K1'],
-    ['J0', '--', '--', 'J1']])
+    ['--', '--', 'S0', '--'], 
+    ['K0', 'J0', 'K1', 'S1'],
+    ['--', '--', '--', 'J1']])
 catch = [[], []]
 win = [0, 0]
 
@@ -66,7 +66,11 @@ def Aing(board, catch, depth):
     #     pre, fill, node = row
     #     print(f"{pre}{node.name}, expt: {node.expt:.2f}")
     # print("=="*20)
-    for i in range(depth - 1):
+    # print(Best.depth)
+    if Best.depth == 0:
+        print("GG")
+        Best = root
+    while Best.depth and Best.parent.depth:
         Best = Best.parent
     # print("=" * 8 + "Recommand" + "="*8)
     # print_(board, catch)
@@ -108,8 +112,8 @@ def minimax_value(node, depth, maximaizingPlayer):
             piece = node.data1[y][x]
             if piece[0] == '-' :
                 if len(node.data2[sf]):
-                    if sf: key = x > 1
-                    else: key = x < 2
+                    if sf: key = x > 2
+                    else: key = x < 1
                     if key:
                         for i in range(len(node.data2[sf])):
                             temp = node.data2[sf][i]
@@ -150,5 +154,6 @@ def minimax_value(node, depth, maximaizingPlayer):
                         else: node.data2[sf].remove(tpiece[0])
                     node.data1[dy][dx] = tpiece
                     node.data1[y][x] = piece
+
 if __name__ == '__main__':
-    Aing(board, catch, 1)
+    Aing(board, catch, 3)
