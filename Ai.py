@@ -67,8 +67,7 @@ def Aing(board, catch, depth):
     # print("=="*20)
     # print(Best.depth)
     if Best.depth == 0:
-        print("GG")
-        Best = root
+        Best = root.children[1]
     while Best.depth and Best.parent.depth:
         Best = Best.parent
     # print("=" * 8 + "Recommand" + "="*8)
@@ -138,9 +137,9 @@ def minimax_value(node, depth, maximaizingPlayer):
                         if tpiece[0] == 'H': node.data2[sf].append('Z')
                         else: node.data2[sf].append(tpiece[0])
                         iscatch = True
-                    if ptype == 8 and dx < 2 :
+                    if ptype == 8 and dx == 0 :
                         node.data1[dy][dx] = 'H1'
-                    elif ptype == 3 and dx > 1:
+                    elif ptype == 3 and dx == 3:
                         node.data1[dy][dx] = 'H0'
                     else:
                         node.data1[dy][dx] = piece
