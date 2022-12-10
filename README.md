@@ -2,7 +2,7 @@
 
 더 지니어스에서 나오는 십이장기를 AI와 두는 프로그램
 
-![img](https://postfiles.pstatic.net/MjAyMDA3MTBfMTEx/MDAxNTk0MzY5NDU0MzE0._ca6e-1TXw93RXi9HywKBUs2LYC-8pUvmkSvwqHBLKUg.7ak8nGpYrIwiYGYINT6kMmM3Pp0HWea6cm-53JqN3U0g.JPEG.jimo9737/1594369453117.jpg?type=w773)
+[![img](http://img.youtube.com/vi/mIZu6d7RY4M/0.jpg)](https://youtu.be/mIZu6d7RY4M)
 
 [더 지니어스 프로그램에서 십이장기를 두고 있는 사진]
 
