@@ -292,3 +292,12 @@ Ai 기준(1) 잡은 말 점수 : -1
 
 ---
 
+참고자료:
+
+https://ko.wikipedia.org/wiki/%EC%95%8C%ED%8C%8C-%EB%B2%A0%ED%83%80_%EA%B0%80%EC%A7%80%EC%B9%98%EA%B8%B0
+
+http://wiki.hash.kr/index.php/%EC%B5%9C%EC%86%8C%EC%B5%9C%EB%8C%80_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
+
+https://going-to-end.tistory.com/entry/Minimax-algorithm-%EB%AF%B8%EB%8B%88%EB%A7%A5%EC%8A%A4-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98
+
+https://micropilot.tistory.com/2973
