@@ -12,8 +12,6 @@ print("├───────────────────┤")
 print("│ 1. 하 2. 중 3. 상 │")
 print("└───────────────────┘")
 
-
-
 while 1:
     depth = input()
     if depth.isdigit() and (0 < int(depth) < 4):
@@ -27,6 +25,18 @@ while 1:
     old_xy, com_xy, type_, isMove  = Board.input_command(board, catch)
     board, catch = Board.Player(board, catch, old_xy, com_xy, type_, isMove)
     Board.print_(board, catch)
+    if Board.isWin(board, catch, 0):
+        print("다시 시작합니다...")
+        input()
+        board, catch = Board.reset_board(board, catch)
+        Board.print_(board, catch)
+        continue
     print("계산 중 입니다...")
     board, catch = Board.Ai_(board, catch, depth)
     Board.print_(board, catch)
+    if Board.isWin(board, catch, 1):
+        print("다시 시작합니다...")
+        input()
+        board, catch = Board.reset_board(board, catch)
+        Board.print_(board, catch)
+        continue

@@ -6,3 +6,4 @@ score = np.loadtxt('score.csv', int, delimiter=',')
 y_axis = {'a' : 1, 'b' : 2, 'c' : 3, 1 : 'a', 2 : 'b', 3 : 'c'}
 dx = [1, 0, -1, 1, 0, -1, 1, 0, -1]
 dy = [1, 1, 1, 0, 0, 0, -1, -1, -1]
+

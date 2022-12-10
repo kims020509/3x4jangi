@@ -51,7 +51,6 @@ def calc_expt(board, catch):
     if len(catch[1]):
         for a in catch[1]:
             total_score += piece_score[a]
-    
     if not K_in[0]: return np.inf
     if not K_in[1]: return -np.inf
     return total_score
@@ -112,8 +111,8 @@ def minimax_value(node, depth, maximaizingPlayer):
             piece = node.data1[y][x]
             if piece[0] == '-' :
                 if len(node.data2[sf]):
-                    if sf: key = x > 2
-                    else: key = x < 1
+                    if sf: key = x > 0
+                    else: key = x < 3
                     if key:
                         for i in range(len(node.data2[sf])):
                             temp = node.data2[sf][i]
