@@ -116,7 +116,7 @@ Board 속 함수의 설명은 다음과 같다.
 
 </center>
 
-- getBoardNow(board, new_xy) : 인수로 받은 board의 xy = (x, y)좌표를 반환한다.  
+- getBoardNow(board, new_xy) : 인수로 받은 board의 xy = (x, y)좌표 속 정보를 반환한다.  
 
 - isIn(x, y) 인수로 받은 x, y좌표가 3x4배열 인덱스를 넘어가면 거짓, 아닐시 참을 반환한다.
   
