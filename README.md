@@ -4,7 +4,7 @@
 
 [![img](http://img.youtube.com/vi/mIZu6d7RY4M/0.jpg)](https://youtu.be/mIZu6d7RY4M)
 
-[더 지니어스 프로그램에서 십이장기를 두고 있는 사진]
+[더 지니어스 프로그램에서 십이장기를 두고 있는 영상]
 
 ---
 ## **목차**
